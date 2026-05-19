@@ -216,3 +216,14 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+/.idea/.gitignore
+/data/Bank_Churn.csv
+/data/Bank_Churn_Data_Dictionary.csv
+/data/Bank_Churn_Messy.xlsx
+/.idea/copilot.data.migration.ask2agent.xml
+/.idea/misc.xml
+/.idea/modules.xml
+/.idea/inspectionProfiles/profiles_settings.xml
+/.idea/inspectionProfiles/Project_Default.xml
+/.idea/rml-bank-churn-training.iml
+/.idea/vcs.xml
