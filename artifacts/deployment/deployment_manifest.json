@@ -1,19 +1,19 @@
 {
-  "created_at_utc": "2026-05-20T03:47:58.738611+00:00",
-  "model_name": "small",
-  "detected_architecture": "small",
+  "created_at_utc": "2026-05-20T04:37:44.482679+00:00",
+  "model_name": "tiny",
+  "detected_architecture": "tiny",
   "architecture": {
     "input_dim": 13,
     "hidden_layers": [
-      64,
-      32
+      32,
+      16
     ],
     "output_dim": 1,
     "hidden_activation": "relu",
     "output": "single binary-classification logit",
     "browser_probability_rule": "sigmoid(logit)"
   },
-  "source_checkpoint": "artifacts/models/best_model.pt",
+  "source_checkpoint": "artifacts/models/tiny.pt",
   "preprocessing_schema": "artifacts/deployment/preprocessing_schema.json",
   "onnx_model": "artifacts/deployment/best_model.onnx",
   "onnx": {
@@ -30,6 +30,6 @@
   "notes": [
     "The web app consumes ONNX and preprocessing_schema.json only.",
     "The ONNX model outputs logits; apply sigmoid in JavaScript for probability.",
-    "If deployment target is Tiny, prefer artifacts/models/tiny.pt over best_model.pt when best_model.pt points to Small."
+    "Deployment is intentionally locked to Tiny by default; use artifacts/models/tiny.pt for the browser app."
   ]
 }

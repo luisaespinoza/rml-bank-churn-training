@@ -1,17 +1,20 @@
 #!/usr/bin/env python3
 """
-Export a trained bank-churn ANN PyTorch checkpoint to ONNX for static browser inference.
+Export the Tiny bank-churn ANN PyTorch checkpoint to ONNX for static browser inference.
 
 Place this file in the training repo root and run, for example:
 
-  python export_ann_to_onnx_v3.py
-  python export_ann_to_onnx_v3.py --checkpoint artifacts/models/tiny.pt --model-name tiny
-  python export_ann_to_onnx_v3.py --checkpoint artifacts/models/best_model.pt --model-name small
+  python export_ann_to_onnx.py
 
-This script intentionally infers the ANN architecture from checkpoint tensor
-shapes, so it supports this project's Tiny and Small checkpoints:
-  Tiny:  input -> 32 -> 16 -> 1
-  Small: input -> 64 -> 32 -> 1
+Default behavior exports artifacts/models/tiny.pt to artifacts/deployment/best_model.onnx.
+Use --allow-non-tiny only for debugging or intentionally exporting another architecture.
+
+This script infers the ANN architecture from checkpoint tensor shapes, but by
+default it REQUIRES the Tiny checkpoint:
+  Tiny: input -> 32 -> 16 -> 1
+
+This prevents accidentally publishing Small as the browser demo model just because
+best_model.pt had slightly better validation ROC-AUC.
 
 It exports logits, not sigmoid probabilities. The browser app should apply sigmoid.
 """
@@ -22,7 +25,7 @@ import argparse
 import json
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, Tuple
 
 import torch
 import torch.nn as nn
@@ -258,22 +261,27 @@ def build_manifest(
         "notes": [
             "The web app consumes ONNX and preprocessing_schema.json only.",
             "The ONNX model outputs logits; apply sigmoid in JavaScript for probability.",
-            "If deployment target is Tiny, prefer artifacts/models/tiny.pt over best_model.pt when best_model.pt points to Small.",
+            "Deployment is intentionally locked to Tiny by default; use artifacts/models/tiny.pt for the browser app.",
         ],
     }
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Export bank-churn ANN checkpoint to ONNX.")
+    parser = argparse.ArgumentParser(description="Export the Tiny bank-churn ANN checkpoint to ONNX.")
     # parser.add_argument("--checkpoint", default="artifacts/models/best_model.pt")
     parser.add_argument("--checkpoint", default="artifacts/models/tiny.pt")
     parser.add_argument("--schema", default="artifacts/deployment/preprocessing_schema.json")
     parser.add_argument("--output", default="artifacts/deployment/best_model.onnx")
     parser.add_argument("--manifest", default="artifacts/deployment/deployment_manifest.json")
-    parser.add_argument("--model-name", default=None, help="Manifest model name. Defaults to detected architecture.")
+    parser.add_argument("--model-name", default="tiny", help="Manifest model name. Defaults to tiny.")
     parser.add_argument("--opset", type=int, default=17)
     parser.add_argument("--no-dynamic-batch", action="store_true")
     parser.add_argument("--allow-schema-mismatch", action="store_true")
+    parser.add_argument(
+        "--allow-non-tiny",
+        action="store_true",
+        help="Allow exporting Small/other checkpoints. Default is to fail unless the checkpoint is Tiny.",
+    )
     return parser.parse_args()
 
 
@@ -316,12 +324,16 @@ def main() -> None:
     model.load_state_dict(state, strict=True)
     model.eval()
 
-    if arch != "tiny" and checkpoint_path.name == "tiny.pt":
-        print(
-            "[warn] best_model.pt is not Tiny. It appears to be "
-            f"{arch}. If the web deployment should showcase Tiny, run:\n"
-            "       python export_ann_to_onnx_v3.py --checkpoint artifacts/models/tiny.pt --output artifacts/deployment/best_model.onnx --model-name tiny"
+    if arch != "tiny" and not args.allow_non_tiny:
+        raise RuntimeError(
+            f"Refusing to export {arch!r} because the browser deployment is locked to Tiny. "
+            "Use --checkpoint artifacts/models/tiny.pt, or pass --allow-non-tiny only if you intentionally want another architecture."
         )
+
+    if arch != "tiny":
+        print(f"[warn] exporting non-Tiny architecture because --allow-non-tiny was passed: {arch}")
+    else:
+        print("[ok] confirmed Tiny architecture for browser deployment")
 
     export_onnx(
         model=model,
