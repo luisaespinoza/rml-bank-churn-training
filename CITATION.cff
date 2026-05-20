@@ -1,0 +1,25 @@
+cff-version: 1.2.0
+title: "Bank Customer Churn Risk Scorer"
+message: "If you use this project, please cite it using the metadata in this file."
+type: software
+authors:
+  - name: "Coco"
+abstract: >-
+  A lightweight machine learning project for bank customer churn prediction.
+  The project compares compact PyTorch artificial neural networks against
+  standard tabular baselines and demonstrates a deployment-oriented tradeoff:
+  accepting a small performance loss relative to XGBoost in exchange for a
+  minimally sized model suitable for static, local browser inference.
+keywords:
+  - machine learning
+  - churn prediction
+  - browser inference
+  - lightweight deployment
+  - PyTorch
+  - XGBoost
+  - tabular data
+license: Apache-2.0
+repository-code: "https://github.com/luisaespinoza/rml-bank-churn-training"
+url: "https://github.com/luisaespinoza/rml-bank-churn-training"
+date-released: "2026-05-19"
+version: "0.1.0"
