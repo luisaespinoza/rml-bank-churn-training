@@ -1,0 +1,69 @@
+{
+  "target": "Exited",
+  "numeric_columns": [
+    "CreditScore",
+    "Age",
+    "Tenure",
+    "Balance",
+    "NumOfProducts",
+    "HasCrCard",
+    "IsActiveMember",
+    "EstimatedSalary"
+  ],
+  "categorical_columns": [
+    "Geography",
+    "Gender"
+  ],
+  "feature_names_out": [
+    "num__CreditScore",
+    "num__Age",
+    "num__Tenure",
+    "num__Balance",
+    "num__NumOfProducts",
+    "num__HasCrCard",
+    "num__IsActiveMember",
+    "num__EstimatedSalary",
+    "cat__Geography_France",
+    "cat__Geography_Germany",
+    "cat__Geography_Spain",
+    "cat__Gender_Female",
+    "cat__Gender_Male"
+  ],
+  "numeric_standardization": {
+    "mean": [
+      651.107,
+      38.845142857142854,
+      5.062571428571428,
+      76569.79188714286,
+      1.5292857142857144,
+      0.7064285714285714,
+      0.5115714285714286,
+      100164.95501857143
+    ],
+    "scale": [
+      96.61784873333261,
+      10.408706073400717,
+      2.8937517346933577,
+      62408.19656908974,
+      0.5821139344261235,
+      0.4553978973359003,
+      0.49986608410735006,
+      57530.49114934276
+    ]
+  },
+  "categorical_encoding": {
+    "handle_unknown": "ignore",
+    "categories": {
+      "Geography": [
+        "France",
+        "Germany",
+        "Spain"
+      ],
+      "Gender": [
+        "Female",
+        "Male"
+      ]
+    }
+  },
+  "notes": "Apply numeric standardization first, then append one-hot categorical features in the listed category order. Unknown categories map to all zeros for that column group."
+}
