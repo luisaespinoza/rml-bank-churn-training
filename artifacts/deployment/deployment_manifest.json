@@ -1,29 +1,35 @@
 {
-  "selected_model": "small",
-  "selection_metric": "roc_auc",
-  "input_dim": 13,
-  "target": "Exited",
-  "seed": 314,
-  "epochs": 10000,
-  "learning_rate": 0.001,
-  "best_model_checkpoint": "artifacts/models/best_model.pt",
-  "preprocessing_schema": "artifacts/deployment/preprocessing_schema.json",
-  "best_model_metrics": {
-    "model": "small",
+  "created_at_utc": "2026-05-20T03:47:58.738611+00:00",
+  "model_name": "small",
+  "detected_architecture": "small",
+  "architecture": {
     "input_dim": 13,
-    "parameter_count": 3009,
-    "estimated_fp32_size_mb": 0.011478424072265625,
-    "best_epoch": 323,
-    "best_val_loss": 0.35414600372314453,
-    "roc_auc": 0.8681198984841211,
-    "pr_auc": 0.7147494528769647,
-    "brier_score": 0.09944555908441544,
-    "log_loss": 0.3281739651671494,
-    "recall_at_top_20_pct": 0.6196721311475409,
-    "precision_at_top_20_pct": 0.63,
-    "checkpoint_path": "artifacts/models/small.pt",
-    "checkpoint_size_mb": 0.3472785949707031,
-    "onnx_export_error": "Module onnx is not installed!"
+    "hidden_layers": [
+      64,
+      32
+    ],
+    "output_dim": 1,
+    "hidden_activation": "relu",
+    "output": "single binary-classification logit",
+    "browser_probability_rule": "sigmoid(logit)"
   },
-  "all_results_path": "report/output_results.json"
+  "source_checkpoint": "artifacts/models/best_model.pt",
+  "preprocessing_schema": "artifacts/deployment/preprocessing_schema.json",
+  "onnx_model": "artifacts/deployment/best_model.onnx",
+  "onnx": {
+    "opset_version": 17,
+    "input_name": "features",
+    "output_name": "logits",
+    "dynamic_batch_axis": true
+  },
+  "validation": {
+    "onnxruntime_available": false,
+    "checked": false,
+    "reason": "onnxruntime validation skipped: No module named 'onnxruntime'"
+  },
+  "notes": [
+    "The web app consumes ONNX and preprocessing_schema.json only.",
+    "The ONNX model outputs logits; apply sigmoid in JavaScript for probability.",
+    "If deployment target is Tiny, prefer artifacts/models/tiny.pt over best_model.pt when best_model.pt points to Small."
+  ]
 }
