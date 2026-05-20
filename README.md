@@ -160,7 +160,7 @@ For this business use case, `Recall@Top 20%` and `Precision@Top 20%` are especia
 
 ## Current Results
 
-The current canonical results use the seed-314 ANN checkpoints and the seed-314 Tiny ANN vs XGBoost runtime/classification benchmark. Older seed-42 exploratory results are not used for the deployment decision.
+The current canonical results use the seed-314 ANN checkpoints and the seed-314 Tiny ANN vs XGBoost runtime/classification benchmark. 
 
 ### ANN checkpoint results
 
